@@ -7,7 +7,9 @@ Last Updated: 2/21/2020
 
 from cell import Cell
 from world import World
+from world_torus import World_Torus
 from time import sleep
+import os
 import toolbox
 
 class Life(object):
@@ -81,7 +83,7 @@ class Life(object):
             elif command == 'acorn':
                 self.acorn()
             elif command == 'save':
-                self.save_world(myPath = './worlds/')
+                self.save(parameter, myPath = './worlds/')
             self.show_menu()
             self.set_command('home')
             command, parameter = self.get_command()
@@ -357,31 +359,58 @@ Ne[X]t Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
         string += f'Speed/Delay ~ {self.__delay}'
         return string
 
-    def save_world(self, myPath):
+    def save(self, filename, myPath='./'):
         """
-        Allow user to save current world
-        :param myPath: directory to folder all saved worlds
-        are in
-        :return: none
+        Save the current generation of the current world as a text file.
+        :param filename: name of the file, may be None at this point.
+        :param myPath: Where the file should be saved.
+        :return: None
         """
-        toolbox.get_boolean('Would you like to save current world? ')
-        if True:
-            filename = input('What would you like to name your file? ')
-            if filename[-5:] != '.life':
-                filename = filename + '.life'
-                print(filename)
-            currentDisplaySet = Cell.displaySet
-            Cell.set_display('basic')
-            self.__currentWorld.write_file(filename)
+        if filename == None:
+            filename = toolbox.get_string('What do you want to call the file? ')
+        #
+        # Make sure the file has the correct file extension.
+        #
+        if filename[-5:] != '.life':
+            filename = filename + '.life'
+        #
+        # if the path doesn't already exist, create it.
+        #
+        if not os.path.isdir(myPath):
+            os.mkdir(myPath)
+        #
+        # Add on the correct path for saving files if the user didn't
+        # include it in the filename.
+        #
+        if filename[0:len(myPath)] != myPath:
+            filename = myPath + filename
+        self.__currentWorld.save(filename)
 
-    def open_file(self):
+    def open(self, filename, myPath='./'):
         """
-        Ask user what file they would like open and
-        print it as new world
-        :param: none
-        :return: none
+        open a text file and use it to populate a new world.
+        :param filename: name of the file, may be None at this point.
+        :param myPath: Where the file is located.
+        :return: None
         """
-        filename = input('Which file would you like to open? ')
+        if filename == None:
+            filename = toolbox.get_string('Which file do you want to open?')
+        #
+        # Check for and add the correct file extension.
+        #
+        if filename[-5:] != '.life':
+            filename = filename + '.life'
+        allFiles = os.listdir(myPath)
+        if filename not in allFiles:
+            print('404: File not found...')
+        else:
+            #
+            # Add on the correct path for saving files if the user didn't
+            # include it in the filename.
+            #
+            if filename[0:len(myPath)] != myPath:
+                filename = myPath + filename
+            self.__currentWorld = World.from_file(filename)
 
     def set_delay(self, delay):
         self.__delay = delay
