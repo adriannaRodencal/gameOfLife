@@ -164,10 +164,10 @@ class World(object):
                         cell.add_neighbor(self.__grid[row-1][column])
                         cell.add_neighbor(self.__grid[row-1][column+1])
                         cell.add_neighbor(self.__grid[0][column])
-                        cell.add_neighbor(self.__grid[0][column-1])
-                        cell.add_neighbor(self.__grid[self.__rows - 1][column])
-                        cell.add_neighbor(self.__grid[row+1][column-self.__columns - 1])
-                        cell.add_neighbor(self.__grid[self.__rows - 1][column-1])
+                        cell.add_neighbor(self.__grid[0][column+1])
+                        cell.add_neighbor(self.__grid[row][self.__columns - 1])
+                        cell.add_neighbor(self.__grid[row-1][self.__columns - 1])
+                        cell.add_neighbor(self.__grid[0][column])
                     # 2. rest of the bottom row (5 neighbors)
                     elif column < (self.__columns - 1):
                         #print('upper')
@@ -176,12 +176,19 @@ class World(object):
                         cell.add_neighbor(self.__grid[row-1][column-1])
                         cell.add_neighbor(self.__grid[row-1][column])
                         cell.add_neighbor(self.__grid[row-1][column+1])
+                        cell.add_neighbor(self.__grid[0][column-1])
+                        cell.add_neighbor(self.__grid[0][column+1])
+                        cell.add_neighbor(self.__grid[0][column])
                     # bottom right corner (3 neighbors)
                     else:
                         #print('upper right')
                         cell.add_neighbor(self.__grid[row][column-1])
                         cell.add_neighbor(self.__grid[row-1][column-1])
                         cell.add_neighbor(self.__grid[row-1][column])
+                        cell.add_neighbor(self.__grid[0][column-1])
+                        cell.add_neighbor(self.__grid[0][column])
+                        cell.add_neighbor(self.__grid[row-1][0])
+                        cell.add_neighbor(self.__grid[row][0])
 
     def set_cell(self, row, column, living):
         """

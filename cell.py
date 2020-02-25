@@ -27,6 +27,9 @@ class Cell(object):
             cls.displaySet = displaySet
             cls.liveChar = cls.displaySets[displaySet]['liveChar']
             cls.deadChar = cls.displaySets[displaySet]['deadChar']
+        elif displaySet == 'choice':
+            cls.liveChar = input('What character would you like for your live cells? ')
+            cls.deadChar = input('What character would you like for your dead cells? ')
         else:
             raise ValueError(f'DisplaySet must be in {legalValues}.')
 

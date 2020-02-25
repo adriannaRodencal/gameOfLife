@@ -329,11 +329,15 @@ Ne[X]t Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
                 liveChar = Cell.displaySets[set]['liveChar']
                 deadChar = Cell.displaySets[set]['deadChar']
                 print(f'{number+1}: living cells: {liveChar} dead cells: {deadChar}')
-            print(f'{number+1}: Choose your own characters! ')
+            print(f'{number+2}: Choose your own characters! ')
             print('**************************************')
             prompt = 'What character set would you like to use?'
-            setNumber = toolbox.get_integer_between(1, number + 1, prompt)
-        setString = list(Cell.displaySets.keys+())[setNumber - 1]
+            setNumber = toolbox.get_integer_between(1, number + 2, prompt)
+            numberOfSets = number + 2
+        if setNumber == numberOfSets:
+            setString = 'choice'
+        else:
+            setString = list(Cell.displaySets.keys())[setNumber - 1]
         Cell.set_display(setString)
         print(self.__currentWorld, end='')
 
