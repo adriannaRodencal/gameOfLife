@@ -29,7 +29,8 @@ class Life(object):
                     'generations': {'command': 'Generation Menu'},
                     'help': {'command': 'Instructions'},
                     'quit': {'command': 'End of Game'},
-                    'save': {'command': 'Current World Saved'} }
+                    'save': {'command': 'Current World Saved'},
+                    'open': {'command': 'Opened Requested File'} }
 
     feedbackSet = 'home'
 
@@ -84,6 +85,8 @@ class Life(object):
                 self.acorn()
             elif command == 'save':
                 self.save(parameter, myPath = './worlds/')
+            elif command == 'open':
+                self.open(parameter, myPath = './worlds/')
             self.show_menu()
             self.set_command('home')
             command, parameter = self.get_command()
@@ -126,7 +129,7 @@ class Life(object):
         """
         if self.__menu == 'main':
             print(f'''
-[N]ew Worlds    World [E]ditor    [G]enerations    [H]elp   [Q]uit    Sa[V]e    [{Life.command}]''')
+[N]ew Worlds    World [E]ditor    [G]enerations    [H]elp   [Q]uit    Sa[V]e   #O[P]en#    [{Life.command}]''')
         if self.__menu == 'worlds':
             print(f'''
 New [W]orld    [L]ong l    [A]corn    H[O]me    [{Life.command}]''')
@@ -135,7 +138,7 @@ New [W]orld    [L]ong l    [A]corn    H[O]me    [{Life.command}]''')
 World [S]ize    [F]ill Size    [D]elay]    [C]hange Display    H[O]me    [{Life.command}]''')
         if self.__menu == 'generations':
                 print(f'''
-Ne[X]t Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
+Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
 
     def get_command(self):
         """
@@ -148,6 +151,7 @@ Ne[X]t Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
                     'g': 'generations',
                     'o': 'home',
                     'w': 'new-world',
+                    'p': 'open',
                     's': 'world-size',
                     'f': 'fill-size',
                     't': 'next-generation',
@@ -159,8 +163,7 @@ Ne[X]t Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
                     'd': 'delay',
                     'h': 'help',
                     '?': 'help',
-                    'q': 'quit',
-                    '': 'next-generation'}
+                    'q': 'quit'}
 
         validCommands = commands.keys()
 
@@ -170,7 +173,7 @@ Ne[X]t Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
             self.__menu = 'main'
             userInput = input('Command: ')
             if userInput == '':
-                userInput = 'w'
+                userInput = 't'
                 parameter = 1
         command = commands[userInput[0].lower()]
         self.set_command(command)
@@ -394,7 +397,13 @@ Ne[X]t Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
         :return: None
         """
         if filename == None:
-            filename = toolbox.get_string('Which file do you want to open?')
+            number = 0
+            print('**************************************')
+            for file in os.listdir('./worlds/'):
+                print(f'{number + 1}: {file}')
+            print('**************************************')
+            prompt = 'Which file would you like to open? '
+            name = toolbox.get_integer_between(1, number + 2, prompt)
         #
         # Check for and add the correct file extension.
         #
@@ -411,6 +420,7 @@ Ne[X]t Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
             if filename[0:len(myPath)] != myPath:
                 filename = myPath + filename
             self.__currentWorld = World.from_file(filename)
+            print(self.__currentWorld)
 
     def set_delay(self, delay):
         self.__delay = delay
