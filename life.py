@@ -5,6 +5,7 @@ First Started: 2/6/2020
 Last Updated: 2/21/2020
 """
 
+
 from cell import Cell
 from world import World
 from world_torus import World_Torus
@@ -27,14 +28,15 @@ class Life(object):
                     'next-generation': {'command': 'Simulation Runthrough'},
                     'skip-generation': {'command': 'End of Simulation'},
                     'generations': {'command': 'Generation Menu'},
+                    'geometry': {'command': 'World Geometry Changed'},
                     'help': {'command': 'Instructions'},
                     'quit': {'command': 'End of Game'},
                     'save': {'command': 'Current World Saved'},
                     'open': {'command': 'Opened Requested File'} }
 
     feedbackSet = 'home'
-
     command = feedbackSets[feedbackSet]['command']
+
 
     @classmethod
     def set_command(cls, feedbackSet):
@@ -57,11 +59,14 @@ class Life(object):
         self.__currentWorld = World(20, 20)
         self.__currentPercent = 50
         self.__delay = .5
+        self.__worldFiles = []
+        self.__geometryWorld = 'flat'
         self.__menu = 'main'
 
     def main(self):
         command = 'help'
         parameter = None
+        self.set_worldFile()
         while command != 'quit':
             if command == 'help':
                 self.help()
@@ -84,9 +89,11 @@ class Life(object):
             elif command == 'acorn':
                 self.acorn()
             elif command == 'save':
-                self.save(parameter, myPath = './worlds/')
+                self.save(parameter, myPath = './lifeWorlds/')
             elif command == 'open':
-                self.open(parameter, myPath = './worlds/')
+                self.open(parameter, myPath = './lifeWorlds/')
+            elif command == 'geometry':
+                self.geometry()
             self.show_menu()
             self.set_command('home')
             command, parameter = self.get_command()
@@ -135,7 +142,7 @@ class Life(object):
 New [W]orld    [L]ong l    [A]corn    H[O]me    [{Life.command}]''')
         if self.__menu == 'editor':
                 print(f'''
-World [S]ize    [F]ill Size    [D]elay]    [C]hange Display    H[O]me    [{Life.command}]''')
+World [S]ize    [F]ill Size    [D]elay]    [C]hange Display     Ge[M]etry   H[O]me    [{Life.command}]''')
         if self.__menu == 'generations':
                 print(f'''
 Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
@@ -158,6 +165,7 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
                     'v': 'save',
                     'l': 'long-l',
                     'a': 'acorn',
+                    'r': 'geometry',
                     'k': 'skip-generation',
                     'c': 'change-display',
                     'd': 'delay',
@@ -186,6 +194,12 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
         if len(userInput) > 1:
             parameter = userInput[1:].strip()
         return command, parameter
+
+    def geometry(self):
+        if self.__geometryWorld == 'flat':
+            self.set_geometry('donut')
+        elif self.__geometryWorld == 'donut':
+            self.set_geometry('flat')
 
     def world_size(self, parameter):
         """
@@ -369,25 +383,25 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
         :param myPath: Where the file should be saved.
         :return: None
         """
-        if filename == None:
-            filename = toolbox.get_string('What do you want to call the file? ')
-        #
-        # Make sure the file has the correct file extension.
-        #
-        if filename[-5:] != '.life':
-            filename = filename + '.life'
-        #
-        # if the path doesn't already exist, create it.
-        #
+        filename = self.name_file(filename)
         if not os.path.isdir(myPath):
             os.mkdir(myPath)
-        #
-        # Add on the correct path for saving files if the user didn't
-        # include it in the filename.
-        #
+        self.__worldFiles.append(filename)
         if filename[0:len(myPath)] != myPath:
             filename = myPath + filename
+        print(myPath)
         self.__currentWorld.save(filename)
+
+    def name_file(self, filename):
+        if filename == None:
+            filename = toolbox.get_string('What do you want to call the file? ')
+            if filename[-5:] != '.life':
+                filename = filename + '.life'
+            if filename in self.__worldFiles:
+                replace = toolbox.get_boolean('There is already with this file. Would you like to replace it with current world? ')
+                if replace == False:
+                    self.name_file(filename)
+        return filename
 
     def open(self, filename, myPath='./'):
         """
@@ -397,13 +411,18 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
         :return: None
         """
         if filename == None:
-            number = 0
+            files = []
+            number = 1
             print('**************************************')
-            for file in os.listdir('./worlds/'):
-                print(f'{number + 1}: {file}')
+            for file in os.listdir('./lifeWorlds/'):
+                print(f'{number}: {file}')
+                files.append(file)
+                number += 1
             print('**************************************')
             prompt = 'Which file would you like to open? '
-            name = toolbox.get_integer_between(1, number + 2, prompt)
+            fileNumber = toolbox.get_integer_between(1, number - 1, prompt)
+            filename = files[fileNumber - 1]
+            print(filename)
         #
         # Check for and add the correct file extension.
         #
@@ -419,7 +438,6 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
             #
             if filename[0:len(myPath)] != myPath:
                 filename = myPath + filename
-            self.__currentWorld = World.from_file(filename)
             print(self.__currentWorld)
 
     def set_delay(self, delay):
@@ -427,6 +445,13 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
 
     def get_delay(self):
         return self.__delay
+
+    def set_worldFile(self):
+        for file in os.listdir('./lifeWorlds/'):
+            self.__worldFiles.append(file)
+
+    def set_geometry(self, geometry):
+        self.__geometryWorld = geometry
 
 if __name__ == '__main__':
     gameOfLife = Life()
