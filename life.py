@@ -410,7 +410,9 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
         :param myPath: Where the file is located.
         :return: None
         """
-        if filename == None:
+        if self.__worldFiles == []:
+            print('You do not have any files saved at the moment. ')
+        elif filename == None:
             files = []
             number = 1
             print('**************************************')
@@ -423,9 +425,9 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
             fileNumber = toolbox.get_integer_between(1, number - 1, prompt)
             filename = files[fileNumber - 1]
             print(filename)
-        #
-        # Check for and add the correct file extension.
-        #
+            #
+            # Check for and add the correct file extension.
+            #
         if filename[-5:] != '.life':
             filename = filename + '.life'
         allFiles = os.listdir(myPath)

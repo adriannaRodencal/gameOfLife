@@ -30,6 +30,7 @@ class World(object):
         self._rows = rows
         self._columns = columns
         self._grid = self.create_grid()
+        self._worldGenerations = []
         self.create_neighbors()
 
     def __str__(self):
@@ -185,6 +186,8 @@ class World(object):
 
         self._grid = newGrid
         self.create_neighbors()
+        self._worldGenerations.append(self._grid)
+        self.rerun(self._grid)
 
     def randomize(self, percent):
         """
@@ -230,6 +233,12 @@ class World(object):
         Cell.set_display(currentDisplaySet)
         with open(filename, 'w') as myFile:
             myFile.write(text)
+
+    def rerun(self, grid):
+        if grid in [self._worldGenerations]:
+            print(grid, end='')
+
+
 
     def get_rows(self):
         return self._rows

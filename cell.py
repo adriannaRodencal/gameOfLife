@@ -38,6 +38,7 @@ class Cell(object):
         self.__column = column
         self.living = False
         self.__neighbors = []
+        self._life = 0
 
     def __str__(self):
         if self.living:
@@ -51,6 +52,11 @@ class Cell(object):
     def set_living(self, state):
         if isinstance(state, bool):
             self.living = state
+            if state == True:
+                self.increase_life()
+                print(self._life)
+            else:
+                self.end_life()
         else:
             raise TypeError('state must be boolean.')
 
@@ -59,6 +65,13 @@ class Cell(object):
 
     def get_column(self):
         return self.__column
+
+    def increase_life(self):
+        life = self._life
+        self._life = life + 1
+
+    def end_life(self):
+        self._life = 0
 
     def add_neighbor(self, cell):
         """
