@@ -15,6 +15,7 @@ import toolbox
 
 class Life(object):
 
+    #TODO! Is there a way that you can add multiple dictionaries into your class?
     feedbackSets = {'new-worlds': {'command': 'New Worlds Menu'},
                     'new-world': {'command': 'Random World Created'},
                     'long-l': {'command': 'Long-l World Created'},
@@ -31,6 +32,7 @@ class Life(object):
                     'geometry': {'command': 'World Geometry Changed'},
                     'help': {'command': 'Instructions'},
                     'quit': {'command': 'End of Game'},
+                    'interesting-worlds': {'command': 'World Files'},
                     'save': {'command': 'Current World Saved'},
                     'open': {'command': 'Opened Requested File'} }
 
@@ -60,6 +62,7 @@ class Life(object):
         self.__currentPercent = 50
         self.__delay = .5
         self.__worldFiles = []
+        self.__computerFiles = []
         self.__geometryWorld = 'flat'
         self.__menu = 'main'
 
@@ -67,6 +70,7 @@ class Life(object):
         command = 'help'
         parameter = None
         self.set_worldFile()
+        self.set_computerFile()
         while command != 'quit':
             if command == 'help':
                 self.help()
@@ -84,6 +88,8 @@ class Life(object):
                 self.world_size(parameter)
             elif command == 'change-display':
                 self.change_display(parameter)
+            elif command == 'interesting-worlds':
+                self.open(parameter, myPath='./preWorlds/')
             elif command == 'long-l':
                 self.long_l()
             elif command == 'acorn':
@@ -136,7 +142,7 @@ class Life(object):
         """
         if self.__menu == 'main':
             print(f'''
-[N]ew Worlds    World [E]ditor    [G]enerations    [H]elp   [Q]uit    Sa[V]e   #O[P]en#    [{Life.command}]''')
+[N]ew Worlds    World [E]ditor    [G]enerations    [H]elp   [Q]uit    Sa[V]e   #O[P]en#     [I]nteresting Worlds    [{Life.command}]''')
         if self.__menu == 'worlds':
             print(f'''
 New [W]orld    [L]ong l    [A]corn    H[O]me    [{Life.command}]''')
@@ -163,6 +169,7 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
                     'f': 'fill-size',
                     't': 'next-generation',
                     'v': 'save',
+                    'i': 'interesting-worlds',
                     'l': 'long-l',
                     'a': 'acorn',
                     'r': 'geometry',
@@ -232,6 +239,7 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
         prompt = 'What percent of cells should be alive? '
         percent = toolbox.get_integer_between(1, 100, prompt)
         self.__currentPercent = percent
+        print(percent)
 
     def long_l(self):
         """
@@ -416,7 +424,7 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
             files = []
             number = 1
             print('**************************************')
-            for file in os.listdir('./lifeWorlds/'):
+            for file in os.listdir(myPath):
                 print(f'{number}: {file}')
                 files.append(file)
                 number += 1
@@ -440,6 +448,7 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
             #
             if filename[0:len(myPath)] != myPath:
                 filename = myPath + filename
+            self.__currentWorld = World.from_file(filename)
             print(self.__currentWorld)
 
     def set_delay(self, delay):
@@ -448,9 +457,13 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
     def get_delay(self):
         return self.__delay
 
-    def set_worldFile(self):
+    def set_worldFile(self, myPath='./'):
         for file in os.listdir('./lifeWorlds/'):
             self.__worldFiles.append(file)
+
+    def set_computerFile(self, myPath='./'):
+        for file in os.listdir('./preWorlds/'):
+            self.__computerFiles.append(file)
 
     def set_geometry(self, geometry):
         self.__geometryWorld = geometry

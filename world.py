@@ -174,6 +174,7 @@ class World(object):
         :param: none
         :return: none
         """
+        #TODO! Percent will not work all of a sudden
         newGrid = self.create_grid()
         for row in self._grid:
             for cell in row:

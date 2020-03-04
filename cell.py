@@ -54,7 +54,6 @@ class Cell(object):
             self.living = state
             if state == True:
                 self.increase_life()
-                print(self._life)
             else:
                 self.end_life()
         else:
@@ -68,7 +67,12 @@ class Cell(object):
 
     def increase_life(self):
         life = self._life
-        self._life = life + 1
+        life = life + 1
+        self.set_life(life)
+
+    def set_life(self, age):
+        self._life = age
+        print(self._life)
 
     def end_life(self):
         self._life = 0
