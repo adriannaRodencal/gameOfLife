@@ -58,12 +58,12 @@ class Life(object):
     def __init__(self):
         # self.__rows = row
         # self.__columns = column
-        self.__currentWorld = World(20, 20)
+        self.__worldType = World_Torus
+        self.__currentWorld = self.__worldType(20, 20)
         self.__currentPercent = 50
         self.__delay = .5
         self.__worldFiles = []
         self.__computerFiles = []
-        self.__geometryWorld = 'flat'
         self.__menu = 'main'
 
     def main(self):
@@ -148,7 +148,7 @@ class Life(object):
 New [W]orld    [L]ong l    [A]corn    H[O]me    [{Life.command}]''')
         if self.__menu == 'editor':
                 print(f'''
-World [S]ize    [F]ill Size    [D]elay]    [C]hange Display     Ge[M]etry   H[O]me    [{Life.command}]''')
+World [S]ize    [F]ill Size    [D]elay]    [C]hange Display     Gemet[R]y   H[O]me    [{Life.command}]''')
         if self.__menu == 'generations':
                 print(f'''
 Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
@@ -203,10 +203,12 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
         return command, parameter
 
     def geometry(self):
-        if self.__geometryWorld == 'flat':
-            self.set_geometry('donut')
-        elif self.__geometryWorld == 'donut':
-            self.set_geometry('flat')
+        geometry = input('What type of world geometry would you like? (t or d) ')
+        if geometry == 't':
+            self.__worldType = World_Torus
+        elif geometry == 'd':
+            self.__worldType = World
+        print(self.__worldType)
 
     def world_size(self, parameter):
         """
@@ -301,15 +303,21 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
         """
         lifeTime = toolbox.get_integer('How many generations would you like to go through? ')
         life = 1
+        again = True
         while life <= lifeTime:
-            self.__currentWorld.next_generation()
-            string = f'››››››››››››››››››››››››››››››››››››››››\n'
-            string += f'{self.__currentWorld}\n'
-            string += f'{self.status_bar(life)}\n'
-            string += f'‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹\n'
-            print(string)
-            sleep(self.__delay)
-            life += 1
+            if again == True:
+                self.__currentWorld.next_generation()
+                string = f'››››››››››››››››››››››››››››››››››››››››\n'
+                string += f'{self.__currentWorld}\n'
+                string += f'{self.status_bar(life)}\n'
+                string += f'‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹\n'
+                print(string)
+                again = self.__currentWorld.rerun()
+                sleep(self.__delay)
+                life += 1
+            else:
+                break
+        print('Simulation Repeated')
 
     def generation_delay(self, parameter):
         """
