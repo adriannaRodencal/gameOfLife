@@ -194,6 +194,15 @@ class World(object):
         self._currentGrid = newGrid
         self.create_neighbors()
 
+    def go_back(self, generation):
+        if generation == 1:
+            self._currentGrid = self.__age1Grid
+        elif generation == 2:
+            self._currentGrid = self.__age2Grid
+        elif generation == 3:
+            self._currentGrid = self.__age3Grid
+            print(self.life.get_currentWorld())
+
     def randomize(self, percent):
         """
         Using the fill percent create a new world with
@@ -241,7 +250,8 @@ class World(object):
 
     def rerun(self):
         if str(self._currentGrid) in [str(self.__age1Grid), str(self.__age2Grid), str(self.__age3Grid)]:
-            return False
+            # forward = toolbox.get_boolean('Simulation has reached a stable point. Would you like to continue?')
+            # return forward
         else:
             return True
 

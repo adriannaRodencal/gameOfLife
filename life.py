@@ -12,6 +12,7 @@ from world_torus import World_Torus
 from time import sleep
 import os
 import toolbox
+import turtle
 
 class Life(object):
 
@@ -33,6 +34,7 @@ class Life(object):
                     'help': {'command': 'Instructions'},
                     'quit': {'command': 'End of Game'},
                     'interesting-worlds': {'command': 'World Files'},
+                    'back-generation': {'command': 'Recover Old Generation'},
                     'save': {'command': 'Current World Saved'},
                     'open': {'command': 'Opened Requested File'} }
 
@@ -59,6 +61,7 @@ class Life(object):
         self.__rows = rows
         self.__columns = columns
         self.__worldType = World_Torus
+        self.__worldStr = 'Torus World'
         self.__currentWorld = self.__worldType
         self.__currentPercent = 50
         self.__delay = .5
@@ -90,10 +93,8 @@ class Life(object):
                 self.change_display(parameter)
             elif command == 'interesting-worlds':
                 self.open(parameter, myPath='./preWorlds/')
-            elif command == 'long-l':
-                self.long_l()
-            elif command == 'acorn':
-                self.acorn()
+            elif command == 'back-generation':
+                self.backwards()
             elif command == 'save':
                 self.save(parameter, myPath = './lifeWorlds/')
             elif command == 'open':
@@ -151,7 +152,7 @@ New [W]orld   [I]nteresting Worlds    H[O]me    [{Life.command}]''')
 World [S]ize    [F]ill Size    [D]elay]    [C]hange Display     Gemet[R]y   H[O]me    [{Life.command}]''')
         if self.__menu == 'generations':
                 print(f'''
-Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
+Nex[T] Generation   S[K]ip Generations    [B]ack Generation    H[O]me    [{Life.command}]''')
 
     def get_command(self):
         """
@@ -176,6 +177,7 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
                     'k': 'skip-generation',
                     'c': 'change-display',
                     'd': 'delay',
+                    'b': 'back-generation',
                     'h': 'help',
                     '?': 'help',
                     'q': 'quit'}
@@ -202,12 +204,18 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
             parameter = userInput[1:].strip()
         return command, parameter
 
+    def backwards(self):
+        oldGeneration = toolbox.get_integer_between(1, 3, 'Which generation would you like to go back to? (1, 2, or 3) ')
+        self.__currentWorld.go_back(oldGeneration)
+
     def geometry(self):
-        geometry = input('What type of world geometry would you like? (t or d) ')
+        geometry = input('What type of world geometry would you like? (Torus or Flat) ')
         if geometry == 't':
             self.__worldType = World_Torus
-        elif geometry == 'd':
+            self.__worldStr = 'Torus World'
+        elif geometry == 'f':
             self.__worldType = World
+            self.__worldStr = 'Flat World'
 
     def world_size(self, parameter):
         """
@@ -278,7 +286,7 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
                 life += 1
             else:
                 break
-        print('Simulation Repeated')
+        print('Simulation Ended')
 
     def generation_delay(self, parameter):
         """
@@ -356,7 +364,8 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
         string += f'Generation ~ {life}   '
         string += f'Dimensions ~ [{rows}x{columns}]   '
         string += f'Alive ~  {percentAlive}   '
-        string += f'Speed/Delay ~ {self.__delay}'
+        string += f'Speed/Delay ~ {self.__delay}    '
+        string += f'Geometry ~ {self.__worldStr}'
         return string
 
     def save(self, filename, myPath='./'):
@@ -445,6 +454,9 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
 
     def get_worldType(self):
         return self.__worldType
+
+    def get_currentWorld(self):
+        return self.__currentWorld
 
 if __name__ == '__main__':
     gameOfLife = Life()
