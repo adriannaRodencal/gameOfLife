@@ -55,11 +55,11 @@ class Life(object):
         else:
             raise ValueError(f'DisplaySet must be in {legalValues}.')
 
-    def __init__(self):
-        # self.__rows = row
-        # self.__columns = column
+    def __init__(self, rows = 20, columns = 20):
+        self.__rows = rows
+        self.__columns = columns
         self.__worldType = World_Torus
-        self.__currentWorld = self.__worldType(20, 20)
+        self.__currentWorld = self.__worldType
         self.__currentPercent = 50
         self.__delay = .5
         self.__worldFiles = []
@@ -292,8 +292,11 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
         :param: none
         :return: none
         """
-        self.__currentWorld.randomize(self.__currentPercent)
-        print(self.__currentWorld)
+        print("Creating World...")
+        w1 = World_Torus(self.__rows, self.__columns)
+        w1.randomize(self.__currentPercent)
+        self.__currentWorld = w1
+        print(w1)
 
     def advance(self, parameter):
         """
@@ -456,7 +459,7 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
             #
             if filename[0:len(myPath)] != myPath:
                 filename = myPath + filename
-            self.__currentWorld = World.from_file(filename)
+            self.__currentWorld = self.__worldType.from_file(filename, self.__worldType)
             print(self.__currentWorld)
 
     def set_delay(self, delay):
@@ -475,6 +478,9 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
 
     def set_geometry(self, geometry):
         self.__geometryWorld = geometry
+
+    def get_worldType(self):
+        return self.__worldType
 
 if __name__ == '__main__':
     gameOfLife = Life()

@@ -5,7 +5,7 @@ import random
 class World(object):
 
     @classmethod
-    def from_file(cls, filename):
+    def from_file(cls, filename, worldType):
         """
         Given a properly formatted text file, return a new World object.
         :param filename: path and filename to the text file.
@@ -18,7 +18,7 @@ class World(object):
         columns = len(text[0])
 
 
-        newWorld = World(rows, columns)
+        newWorld = worldType(rows, columns)
         for rowNumber, row in enumerate(text):
             for columnNumber, cellText in enumerate(row):
                 if cellText == Cell.liveChar:
