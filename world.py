@@ -26,9 +26,10 @@ class World(object):
         return newWorld
 
 
-    def __init__(self, rows, columns):
+    def __init__(self, rows, columns, percent = 50):
         self._rows = rows
         self._columns = columns
+        self.__percent = percent
         self._currentGrid = self.create_grid()
         self.__age1Grid = None
         self.__age2Grid = None

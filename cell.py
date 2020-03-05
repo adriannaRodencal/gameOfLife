@@ -72,7 +72,6 @@ class Cell(object):
 
     def set_life(self, age):
         self._life = age
-        print(self._life)
 
     def end_life(self):
         self._life = 0

@@ -145,7 +145,7 @@ class Life(object):
 [N]ew Worlds    World [E]ditor    [G]enerations    [H]elp   [Q]uit    Sa[V]e   #O[P]en#     [I]nteresting Worlds    [{Life.command}]''')
         if self.__menu == 'worlds':
             print(f'''
-New [W]orld    [L]ong l    [A]corn    H[O]me    [{Life.command}]''')
+New [W]orld   [I]nteresting Worlds    H[O]me    [{Life.command}]''')
         if self.__menu == 'editor':
                 print(f'''
 World [S]ize    [F]ill Size    [D]elay]    [C]hange Display     Gemet[R]y   H[O]me    [{Life.command}]''')
@@ -208,7 +208,6 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
             self.__worldType = World_Torus
         elif geometry == 'd':
             self.__worldType = World
-        print(self.__worldType)
 
     def world_size(self, parameter):
         """
@@ -216,9 +215,9 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
         :param parameter: what dimensions did the user give
         :return: none
         """
-        row = int(input('How many rows(vertical) would you like? '))
-        column = int(input('How many columns(horizontal) would you like? '))
-        self.__currentWorld = World(row, column)
+        self.__rows = int(input('How many rows(vertical) would you like? '))
+        self.__columns = int(input('How many columns(horizontal) would you like? '))
+        self.__currentWorld = self.__worldType(self.__rows, self.__columns, self.__currentPercent)
         self.__currentWorld.randomize(self.__currentPercent)
         print(self.__currentWorld)
 
@@ -241,49 +240,8 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
         prompt = 'What percent of cells should be alive? '
         percent = toolbox.get_integer_between(1, 100, prompt)
         self.__currentPercent = percent
-        print(percent)
-
-    def long_l(self):
-        """
-        Print out a new blank world with only a l alive
-        :param: none
-        :return: none
-        """
-        rows = self.__currentWorld.get_rows()
-        columns = self.__currentWorld.get_columns()
-        self.__currentWorld = World(rows, columns)
-
-        middleRow = int(rows / 2)
-        middleColumn = int(columns / 2)
-
-        self.__currentWorld.set_cell(middleRow - 2, middleColumn, True)
-        self.__currentWorld.set_cell(middleRow - 1, middleColumn, True)
-        self.__currentWorld.set_cell(middleRow - 0, middleColumn, True)
-        self.__currentWorld.set_cell(middleRow + 1, middleColumn, True)
-        self.__currentWorld.set_cell(middleRow + 1, middleColumn + 1, True)
-        print(self.__currentWorld, end='')
-
-    def acorn(self):
-        """
-        Print out a new blank world for the "acorn"
-        :param: none
-        :return: none
-        """
-        rows = self.__currentWorld.get_rows()
-        columns = self.__currentWorld.get_columns()
-        self.__currentWorld = World(rows, columns)
-
-        middleRow = int(rows / 2)
-        middleColumn = int(columns / 2)
-
-        self.__currentWorld.set_cell(middleRow - 1, middleColumn - 2, True)
-        self.__currentWorld.set_cell(middleRow - 0, middleColumn - 0, True)
-        self.__currentWorld.set_cell(middleRow + 1, middleColumn - 3, True)
-        self.__currentWorld.set_cell(middleRow + 1, middleColumn - 2, True)
-        self.__currentWorld.set_cell(middleRow + 1, middleColumn + 1, True)
-        self.__currentWorld.set_cell(middleRow + 1, middleColumn + 2, True)
-        self.__currentWorld.set_cell(middleRow + 1, middleColumn + 3, True)
-        print(self.__currentWorld, end='')
+        w1 = self.__worldType(self.__rows, self.__columns, self.__currentPercent)
+        print(w1)
 
     def random(self):
         """
@@ -328,7 +286,13 @@ Nex[T] Generation   S[K]ip Generations    H[O]me    [{Life.command}]''')
         :param parameter:
         :return: none
         """
-        delay = int(input('How many seconds of delay would you like between generations? '))
+        print("Changing simulation speed...")
+        if toolbox.is_number(parameter):
+            delay = float(parameter)
+        else:
+            prompt = 'Seconds of delay between generations?'
+            delay = toolbox.get_number(prompt)
+        self.__delay = delay
         self.set_delay(delay)
 
     def skip_advance(self, parameter):
