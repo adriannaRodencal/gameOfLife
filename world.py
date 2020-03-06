@@ -1,4 +1,5 @@
 from cell import Cell
+from rules import Rules
 import toolbox
 import random
 
@@ -18,7 +19,7 @@ class World(object):
         columns = len(text[0])
 
 
-        newWorld = worldType(rows, columns)
+        newWorld = worldType(rows, columns, worldType)
         for rowNumber, row in enumerate(text):
             for columnNumber, cellText in enumerate(row):
                 if cellText == Cell.liveChar:
@@ -26,10 +27,11 @@ class World(object):
         return newWorld
 
 
-    def __init__(self, rows, columns, percent = 50):
+    def __init__(self, rows, columns, worldType,  percent = 50):
         self._rows = rows
         self._columns = columns
         self.__percent = percent
+        self.__worldType = worldType
         self._currentGrid = self.create_grid()
         self.__age1Grid = None
         self.__age2Grid = None
@@ -179,13 +181,15 @@ class World(object):
         """
         #TODO! Percent will not work all of a sudden
         newGrid = self.create_grid()
+        print(Rules.surviveNum)
+        print(Rules.bornNum)
         for row in self._currentGrid:
             for cell in row:
                 if cell.get_living() == True:
-                    if cell.living_neighbors() in [2, 3]:
+                    if str(cell.living_neighbors()) in str(Rules.surviveNum):
                         newGrid[cell.get_row()][cell.get_column()].set_living(True)
                 else:
-                    if cell.living_neighbors() == 3:
+                    if str(cell.living_neighbors()) in str(Rules.bornNum):
                         newGrid[cell.get_row()][cell.get_column()].set_living(True)
 
         self.__age3Grid = self.__age2Grid
@@ -250,8 +254,13 @@ class World(object):
 
     def rerun(self):
         if str(self._currentGrid) in [str(self.__age1Grid), str(self.__age2Grid), str(self.__age3Grid)]:
-            # forward = toolbox.get_boolean('Simulation has reached a stable point. Would you like to continue?')
-            # return forward
+            forward = toolbox.get_boolean('Simulation has reached a stable point. Would you like to continue?')
+            if forward == True:
+                self.__age1Grid = None
+                self.__age2Grid = None
+                self.__age3Grid = None
+                print(self.__worldType)
+
         else:
             return True
 

@@ -9,6 +9,7 @@ Last Updated: 2/21/2020
 from cell import Cell
 from world import World
 from world_torus import World_Torus
+from rules import Rules
 from time import sleep
 import os
 import toolbox
@@ -35,6 +36,7 @@ class Life(object):
                     'quit': {'command': 'End of Game'},
                     'interesting-worlds': {'command': 'World Files'},
                     'back-generation': {'command': 'Recover Old Generation'},
+                    'rule-sets': {'command': 'Changing Rule Sets'},
                     'save': {'command': 'Current World Saved'},
                     'open': {'command': 'Opened Requested File'} }
 
@@ -57,7 +59,7 @@ class Life(object):
         else:
             raise ValueError(f'DisplaySet must be in {legalValues}.')
 
-    def __init__(self, rows = 20, columns = 20):
+    def __init__(self, rows = 20, columns = 100):
         self.__rows = rows
         self.__columns = columns
         self.__worldType = World_Torus
@@ -101,6 +103,8 @@ class Life(object):
                 self.open(parameter, myPath = './lifeWorlds/')
             elif command == 'geometry':
                 self.geometry()
+            elif command == 'rule-sets':
+                self.change_rules(parameter)
             self.show_menu()
             self.set_command('home')
             command, parameter = self.get_command()
@@ -149,7 +153,7 @@ class Life(object):
 New [W]orld   [I]nteresting Worlds    H[O]me    [{Life.command}]''')
         if self.__menu == 'editor':
                 print(f'''
-World [S]ize    [F]ill Size    [D]elay]    [C]hange Display     Gemet[R]y   H[O]me    [{Life.command}]''')
+World [S]ize    [F]ill Size    [D]elay]    R[U]le Sets    [C]hange Display     Gemet[R]y   H[O]me    [{Life.command}]''')
         if self.__menu == 'generations':
                 print(f'''
 Nex[T] Generation   S[K]ip Generations    [B]ack Generation    H[O]me    [{Life.command}]''')
@@ -170,6 +174,7 @@ Nex[T] Generation   S[K]ip Generations    [B]ack Generation    H[O]me    [{Life.
                     'f': 'fill-size',
                     't': 'next-generation',
                     'v': 'save',
+                    'u': 'rule-sets',
                     'i': 'interesting-worlds',
                     'l': 'long-l',
                     'a': 'acorn',
@@ -217,6 +222,10 @@ Nex[T] Generation   S[K]ip Generations    [B]ack Generation    H[O]me    [{Life.
             self.__worldType = World
             self.__worldStr = 'Flat World'
 
+    def change_rule_set(self):
+        pass
+
+
     def world_size(self, parameter):
         """
         Allow user to change the current world size
@@ -225,7 +234,7 @@ Nex[T] Generation   S[K]ip Generations    [B]ack Generation    H[O]me    [{Life.
         """
         self.__rows = int(input('How many rows(vertical) would you like? '))
         self.__columns = int(input('How many columns(horizontal) would you like? '))
-        self.__currentWorld = self.__worldType(self.__rows, self.__columns, self.__currentPercent)
+        self.__currentWorld = self.__worldType(self.__rows, self.__columns, self.__worldType, self.__currentPercent)
         self.__currentWorld.randomize(self.__currentPercent)
         print(self.__currentWorld)
 
@@ -259,7 +268,7 @@ Nex[T] Generation   S[K]ip Generations    [B]ack Generation    H[O]me    [{Life.
         :return: none
         """
         print("Creating World...")
-        w1 = World_Torus(self.__rows, self.__columns)
+        w1 = World_Torus(self.__rows, self.__columns, self.__worldType)
         w1.randomize(self.__currentPercent)
         self.__currentWorld = w1
         print(w1)
@@ -349,6 +358,33 @@ Nex[T] Generation   S[K]ip Generations    [B]ack Generation    H[O]me    [{Life.
         else:
             setString = list(Cell.displaySets.keys())[setNumber - 1]
         Cell.set_display(setString)
+        print(self.__currentWorld, end='')
+
+    def change_rules(self, parameter):
+        """
+        Print possible display changes for the user.
+        :param parameter:
+        :return: none
+        """
+        if toolbox.is_integer(parameter) and \
+                1 <= int(parameter) <= len(Rules.ruleSets.keys()):
+            setNumber = int(parameter)
+        else:
+            print('**************************************')
+            for number, ruleSet in enumerate(Rules.ruleSets):
+                bornNum = Rules.ruleSets[ruleSet]['bornNum']
+                surviveNum = Rules.ruleSets[ruleSet]['surviveNum']
+                print(f'{number+1}: Born Number: {bornNum} Survive Number: {surviveNum}')
+            print(f'{number+2}: Choose your own characters! ')
+            print('**************************************')
+            prompt = 'What character set would you like to use?'
+            setNumber = toolbox.get_integer_between(1, number + 2, prompt)
+            numberOfSets = number + 2
+        if setNumber == numberOfSets:
+            setString = 'choice'
+        else:
+            setString = list(Rules.ruleSets.keys())[setNumber - 1]
+        Rules.set_rules(setString)
         print(self.__currentWorld, end='')
 
     def status_bar(self, life):
