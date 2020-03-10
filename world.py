@@ -33,7 +33,9 @@ class World(object):
         self.__percent = percent
         self.__worldType = worldType
         self._currentGrid = self.create_grid()
-        self.__pastGenerations = []
+        self.__age1Grid = None
+        self.__age2Grid = None
+        self.__age3Grid = None
         self.create_neighbors()
 
     def __str__(self):

@@ -61,8 +61,8 @@ class Life(object):
     def __init__(self, rows = 20, columns = 100):
         self.__rows = rows
         self.__columns = columns
-        self.__worldType = World_Torus
-        self.__worldStr = 'Torus World'
+        self.__worldType = World
+        self.__worldStr = 'World'
         self.__currentWorld = self.__worldType
         self.__currentPercent = 50
         self.__delay = .5
@@ -448,8 +448,9 @@ Nex[T] Generation   S[K]ip Generations    [B]ack Generation    H[O]me    [{Life.
         :param myPath: Where the file is located.
         :return: None
         """
-        if self.__worldFiles == []:
-            print('You do not have any files saved at the moment. ')
+        if myPath == './lifeWorlds/':
+            if self.__worldFiles == []:
+                print('You do not have any files saved at the moment. ')
         elif filename == None:
             files = []
             number = 1

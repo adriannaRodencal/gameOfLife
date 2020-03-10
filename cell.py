@@ -5,7 +5,8 @@ class Cell(object):
                     'stars': {'liveChar':'\u272D','deadChar':'\u2730'},
                     'weather': {'liveChar':'\u2600','deadChar':'\u2601'},
                     'spades': {'liveChar':'\u2660','deadChar':'\u2664'},
-                    'atom': {'liveChar':'\u269B','deadChar':' '} }
+                    'atom': {'liveChar':'\u269B','deadChar':' '},
+                    'squares': {'liveChar': '\u2B1B', 'deadChar': '\u2B1C'} }
 
     displaySet = 'basic'
 
