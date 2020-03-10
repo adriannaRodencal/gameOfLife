@@ -27,6 +27,9 @@ class Cell(object):
             cls.displaySet = displaySet
             cls.liveChar = cls.displaySets[displaySet]['liveChar']
             cls.deadChar = cls.displaySets[displaySet]['deadChar']
+        elif displaySet == 'choice':
+            cls.liveChar = input('What character would you like for your live cells? ')
+            cls.deadChar = input('What character would you like for your dead cells? ')
         else:
             raise ValueError(f'DisplaySet must be in {legalValues}.')
 
@@ -35,6 +38,7 @@ class Cell(object):
         self.__column = column
         self.living = False
         self.__neighbors = []
+        self._life = 0
 
     def __str__(self):
         if self.living:
@@ -48,6 +52,10 @@ class Cell(object):
     def set_living(self, state):
         if isinstance(state, bool):
             self.living = state
+            if state == True:
+                self.increase_life()
+            else:
+                self.end_life()
         else:
             raise TypeError('state must be boolean.')
 
@@ -56,6 +64,17 @@ class Cell(object):
 
     def get_column(self):
         return self.__column
+
+    def increase_life(self):
+        life = self._life
+        life = life + 1
+        self.set_life(life)
+
+    def set_life(self, age):
+        self._life = age
+
+    def end_life(self):
+        self._life = 0
 
     def add_neighbor(self, cell):
         """
