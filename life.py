@@ -35,7 +35,6 @@ class Life(object):
                     'help': {'command': 'Instructions'},
                     'quit': {'command': 'End of Game'},
                     'interesting-worlds': {'command': 'World Files'},
-                    'back-generation': {'command': 'Recover Old Generation'},
                     'rule-sets': {'command': 'Changing Rule Sets'},
                     'save': {'command': 'Current World Saved'},
                     'open': {'command': 'Opened Requested File'} }
@@ -125,7 +124,24 @@ class Life(object):
         ₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪
         Commands:
         
-        
+                    'n':    New World Menu
+                    'e':    World Editor Menu
+                    'g':    Generation Menu
+                    'o':    Main Menu
+                    'w':    Creat New World
+                    'p':    Open Saved File
+                    's':    Change World Size
+                    'f':    Change Percent Fill
+                    't':    Run the Next # of Generations
+                    'v':    Save Current World
+                    'u':    Change World Rule Sets
+                    'i':    Cool and Interesting Worlds
+                    'r':    Change the Shape of the World
+                    'k':    Skip x Generations
+                    'c':    Change Cell Characters
+                    'd':    Delay Each World
+                    'h':    Print This Again
+                    'q':    Quit Program
         ₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪''')
         input(' Press <ENTER> when ready to see a world example...')
         self.new_world()
