@@ -124,17 +124,8 @@ class Life(object):
         of cells that are living.
         ₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪
         Commands:
-        New World - this will create a new randomized world. If World Size
-            and Fill Size are not selected it will print a default world of 10x10
-            and 50% fill size.
-        World Size - this will ask you how big you would like your world to 
-            be. And then print a new world with that size.
-        Fill Size - this will ask you what percent of the world you would
-            like living.
-        Next Generation or <ENTER> - this will ask you how many "generations" 
-            would you like to go through then will print them out for you.
-        Help or ? - this will reprint these instructions in case you forget
-        Quit - this will stop the entire program.
+        
+        
         ₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪''')
         input(' Press <ENTER> when ready to see a world example...')
         self.new_world()
@@ -147,10 +138,10 @@ class Life(object):
         """
         if self.__menu == 'main':
             print(f'''
-[N]ew Worlds    World [E]ditor    [G]enerations    [H]elp   [Q]uit    Sa[V]e   #O[P]en#     [I]nteresting Worlds    [{Life.command}]''')
+[N]ew Worlds    World [E]ditor    [G]enerations    [H]elp   [Q]uit    [{Life.command}]''')
         if self.__menu == 'worlds':
             print(f'''
-New [W]orld   [I]nteresting Worlds    H[O]me    [{Life.command}]''')
+New [W]orld   [I]nteresting Worlds    Sa[V]e   O[P]en   H[O]me    [{Life.command}]''')
         if self.__menu == 'editor':
                 print(f'''
 World [S]ize    [F]ill Size    [D]elay]    R[U]le Sets    [C]hange Display     Gemet[R]y   H[O]me    [{Life.command}]''')
@@ -209,11 +200,12 @@ Nex[T] Generation   S[K]ip Generations    [B]ack Generation    H[O]me    [{Life.
             parameter = userInput[1:].strip()
         return command, parameter
 
-    def backwards(self):
-        oldGeneration = toolbox.get_integer_between(1, 3, 'Which generation would you like to go back to? (1, 2, or 3) ')
-        self.__currentWorld.go_back(oldGeneration)
-
     def geometry(self):
+        """
+        Takes user input and changes world geometry
+        :param: none
+        :return: none
+        """
         geometry = input('What type of world geometry would you like? (Torus or Flat) ')
         if geometry == 't':
             self.__worldType = World_Torus
@@ -221,10 +213,6 @@ Nex[T] Generation   S[K]ip Generations    [B]ack Generation    H[O]me    [{Life.
         elif geometry == 'f':
             self.__worldType = World
             self.__worldStr = 'Flat World'
-
-    def change_rule_set(self):
-        pass
-
 
     def world_size(self, parameter):
         """
@@ -363,7 +351,7 @@ Nex[T] Generation   S[K]ip Generations    [B]ack Generation    H[O]me    [{Life.
     def change_rules(self, parameter):
         """
         Print possible display changes for the user.
-        :param parameter:
+        :param parameter: which rule display user wants
         :return: none
         """
         if toolbox.is_integer(parameter) and \
@@ -400,8 +388,9 @@ Nex[T] Generation   S[K]ip Generations    [B]ack Generation    H[O]me    [{Life.
         string += f'Generation ~ {life}   '
         string += f'Dimensions ~ [{rows}x{columns}]   '
         string += f'Alive ~  {percentAlive}   '
-        string += f'Speed/Delay ~ {self.__delay}    '
-        string += f'Geometry ~ {self.__worldStr}'
+        string += f'Speed/Delay ~ {self.__delay}\n    '
+        string += f'      Geometry ~ {self.__worldStr}    '
+        string += f'Rules ~ Cell Born @: {Rules.bornNum} Cell Survive @: {Rules.surviveNum}'
         return string
 
     def save(self, filename, myPath='./'):
@@ -421,6 +410,11 @@ Nex[T] Generation   S[K]ip Generations    [B]ack Generation    H[O]me    [{Life.
         self.__currentWorld.save(filename)
 
     def name_file(self, filename):
+        """
+        Name file based on user input
+        :param filename: what the user would like as filename
+        :return: filename
+        """
         if filename == None:
             filename = toolbox.get_string('What do you want to call the file? ')
             if filename[-5:] != '.life':
