@@ -1,4 +1,5 @@
 
+# TODO THIS IS  A TEST TO SEE IF BRANCHES ARE WORKING
 
 class Rules(object):
 
@@ -19,7 +20,7 @@ class Rules(object):
         Using classmethod set the current display set
         Using classmethod set the current display set
         and be able to change it
-        :param displaySet: chosen set of characters that
+        :param ruleSet: chosen set of rules that
         are printed during simulation
         :return: none
         """
