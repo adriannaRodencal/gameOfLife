@@ -181,8 +181,6 @@ class World(object):
         """
         #TODO! Percent will not work all of a sudden
         newGrid = self.create_grid()
-        print(Rules.surviveNum)
-        print(Rules.bornNum)
         for row in self._currentGrid:
             for cell in row:
                 if cell.get_living() == True:
