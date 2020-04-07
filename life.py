@@ -37,7 +37,8 @@ class Life(object):
                     'interesting-worlds': {'command': 'World Files'},
                     'rule-sets': {'command': 'Changing Rule Sets'},
                     'save': {'command': 'Current World Saved'},
-                    'open': {'command': 'Opened Requested File'} }
+                    'open': {'command': 'Opened Requested File'},
+                    'instructions': {'command': 'More Instructions'}}
 
     feedbackSet = 'home'
     command = feedbackSets[feedbackSet]['command']
@@ -73,7 +74,7 @@ class Life(object):
     def main(self):
         command = 'help'
         parameter = None
-        self.set_worldFile()
+        '''self.set_worldFile()'''
         self.set_computerFile()
         while command != 'quit':
             if command == 'help':
@@ -104,6 +105,8 @@ class Life(object):
                 self.geometry()
             elif command == 'rule-sets':
                 self.change_rules(parameter)
+            elif command == 'instructions':
+                self.more_instructions()
             self.show_menu()
             self.set_command('home')
             command, parameter = self.get_command()
@@ -123,6 +126,7 @@ class Life(object):
         of cells that are living.
         ₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪₪
         Commands:
+                    'm':    More Instructions
         
                     'n':    New World Menu
                     'e':    World Editor Menu
@@ -192,7 +196,8 @@ Nex[T] Generation   S[K]ip Generations    [B]ack Generation    H[O]me    [{Life.
                     'b': 'back-generation',
                     'h': 'help',
                     '?': 'help',
-                    'q': 'quit'}
+                    'q': 'quit',
+                    'm': 'instructions'}
 
         validCommands = commands.keys()
 
@@ -215,6 +220,20 @@ Nex[T] Generation   S[K]ip Generations    [B]ack Generation    H[O]me    [{Life.
         if len(userInput) > 1:
             parameter = userInput[1:].strip()
         return command, parameter
+
+    def more_instructions(self):
+        """
+        Prints more detailed instructions regarding the game rules.
+        :param: none
+        :return: none
+        """
+        print('''**    This program implements a cellular biology simulation. Each cell can have 8 neighboring     **
+**    cells. The state of a cell is determined by the number of neighbors that cell has:          **
+**                                                                                                **
+**       0 to 1 neighbors dies of lack of symbiotic nutrients                                     **
+**       2 to 3 neighbors lives comfortably                                                       **
+**       4 to 8 neighbors dies of over crowding                                                   **
+**       exactly 3 neighbors a new cell is generated''')
 
     def geometry(self):
         """
@@ -488,9 +507,9 @@ Nex[T] Generation   S[K]ip Generations    [B]ack Generation    H[O]me    [{Life.
     def get_delay(self):
         return self.__delay
 
-    def set_worldFile(self, myPath='./'):
+    '''def set_worldFile(self, myPath='./'):
         for file in os.listdir('./lifeWorlds/'):
-            self.__worldFiles.append(file)
+            self.__worldFiles.append(file)'''
 
     def set_computerFile(self, myPath='./'):
         for file in os.listdir('./preWorlds/'):
